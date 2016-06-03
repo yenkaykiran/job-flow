@@ -1,0 +1,72 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myJobStepLabel">Create or edit a Job Step</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.jobStep.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.jobStep.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                    ng-model="vm.jobStep.name"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_stepType">Step Type</label>
+            <select class="form-control" name="stepType" ng-model="vm.jobStep.stepType" id="field_stepType">
+                <option value="START">START</option>
+                <option value="END">END</option>
+                <option value="OPERATION">OPERATION</option>
+                <option value="SUBROUTINE">SUBROUTINE</option>
+                <option value="CONDITION">CONDITION</option>
+                <option value="INPUTOUTPUT">INPUTOUTPUT</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_stepStatus">Step Status</label>
+            <select class="form-control" name="stepStatus" ng-model="vm.jobStep.stepStatus" id="field_stepStatus">
+                <option value="PAST">PAST</option>
+                <option value="FUTURE">FUTURE</option>
+                <option value="CURRENT">CURRENT</option>
+                <option value="INVALID">INVALID</option>
+                <option value="APPROVED">APPROVED</option>
+                <option value="REJECTED">REJECTED</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_message">Message</label>
+            <input type="text" class="form-control" name="message" id="field_message"
+                    ng-model="vm.jobStep.message"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label for="field_jobInstance">Job Instance</label>
+            <select class="form-control" id="field_jobInstance" name="jobInstance" ng-model="vm.jobStep.jobInstance" ng-options="jobInstance as jobInstance.name for jobInstance in vm.jobinstances track by jobInstance.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_jobStep">Job Step</label>
+            <select class="form-control" id="field_jobStep" name="jobStep" ng-model="vm.jobStep.jobStep" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

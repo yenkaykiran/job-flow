@@ -1,0 +1,42 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "jobInstance",
+            "otherEntityName": "jobInstance",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "jobStep",
+            "otherEntityName": "jobStep",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "stepType",
+            "fieldType": "StepType",
+            "fieldValues": "START,END,OPERATION,SUBROUTINE,CONDITION,INPUTOUTPUT"
+        },
+        {
+            "fieldName": "stepStatus",
+            "fieldType": "StepStatus",
+            "fieldValues": "PAST,FUTURE,CURRENT,INVALID,APPROVED,REJECTED"
+        },
+        {
+            "fieldName": "message",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160603134634",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "job_steps",
+    "pagination": "infinite-scroll"
+}

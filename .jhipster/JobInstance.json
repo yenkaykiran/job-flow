@@ -1,0 +1,19 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "enabled",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20160603133204",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "job_instances",
+    "pagination": "pagination"
+}
