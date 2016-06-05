@@ -14,6 +14,12 @@
                     ng-model="vm.jobStep.id" readonly />
         </div>
         <div class="form-group">
+            <label for="field_jobInstance">Job Instance</label>
+            <select class="form-control" id="field_jobInstance" name="jobInstance" ng-model="vm.jobStep.jobInstanceId" ng-options="jobInstance.id as jobInstance.name for jobInstance in vm.jobinstances" ng-disabled="vm.jobStep.disableJobInstance==true" ng-change="vm.getInstanceSteps(vm.jobStep.jobInstanceId)">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
             <label class="control-label" for="field_name">Name</label>
             <input type="text" class="form-control" name="name" id="field_name"
                     ng-model="vm.jobStep.name"
@@ -48,12 +54,6 @@
                      />
         </div>
 
-        <div class="form-group">
-            <label for="field_jobInstance">Job Instance</label>
-            <select class="form-control" id="field_jobInstance" name="jobInstance" ng-model="vm.jobStep.jobInstanceId" ng-options="jobInstance.id as jobInstance.name for jobInstance in vm.jobinstances">
-                <option value=""></option>
-            </select>
-        </div>
         <div class="form-group">
             <label for="field_yesPath">Yes Path</label>
             <select class="form-control" id="field_yesPath" name="yesPath" ng-model="vm.jobStep.yesPathId" ng-options="jobStep.id as jobStep.name for jobStep in vm.jobsteps">

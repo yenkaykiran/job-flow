@@ -11,7 +11,11 @@
         var vm = this;
         vm.jobStep = entity;
         vm.jobinstances = JobInstance.query();
-        vm.jobsteps = JobStep.query();
+        if(vm.jobStep.jobInstanceId) {
+            vm.jobsteps = vm.getInstanceSteps(vm.jobStep.jobInstanceId);
+        } else {
+            vm.jobsteps = JobStep.query();
+        }
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -39,5 +43,9 @@
         vm.clear = function() {
             $uibModalInstance.dismiss('cancel');
         };
+        
+        vm.getInstanceSteps = function(instanceId) {
+            return JobStep.byInstance({instance: instanceId});
+        }
     }
 })();

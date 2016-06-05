@@ -158,13 +158,14 @@
                     size: 'lg',
                     resolve: {
                         entity: function () {
+                            console.log("L: " + $stateParams.id);
                             return {
                                 name: null,
                                 stepType: null,
                                 stepStatus: null,
                                 message: null,
                                 id: null,
-                                jobInstance: JobInstance.get({id : $stateParams.id}),
+                                jobInstanceId: parseInt($stateParams.id),
                                 disableJobInstance: true
                             };
                         }

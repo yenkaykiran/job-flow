@@ -1,9 +1,11 @@
 package yuown.service;
 
+import yuown.domain.JobInstance;
 import yuown.domain.JobStep;
 import yuown.repository.JobStepRepository;
 import yuown.web.rest.dto.JobStepDTO;
 import yuown.web.rest.mapper.JobStepMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,4 +84,10 @@ public class JobStepService {
         log.debug("Request to delete JobStep : {}", id);
         jobStepRepository.delete(id);
     }
+
+	public Page<JobStep> findAllByJobInstance(JobInstance jobInstance, Pageable pageable) {
+		log.debug("Request to get all JobSteps");
+		Page<JobStep> result = jobStepRepository.findAllByJobInstance(jobInstance, pageable);
+		return result;
+	}
 }

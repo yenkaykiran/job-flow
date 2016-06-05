@@ -62,7 +62,7 @@
         vm.jobSteps = [];
         vm.reverse = true;
         vm.loadAll = function() {
-            JobStep.query({
+            JobStep.byInstance({
                 instance: $stateParams.id
             }, onSuccess);
             function onSuccess(data, headers) {
@@ -83,6 +83,68 @@
 
     function JobChartController ($scope, $state, JobStep, ParseLinks, AlertService, $stateParams) {
         var vm = this;
+        
+        var settings = {
+            'x' : 0,
+            'y' : 0,
+            'line-width' : 1,
+//            'line-length' : 50,
+            'text-margin' : 10,
+//            'font-size' : 14,
+            'font-color' : 'black',
+            'line-color' : 'black',
+            'element-color' : 'black',
+            'fill' : 'white',
+            'yes-text' : 'yes',
+            'no-text' : 'no',
+            'arrow-end' : 'block',
+            'scale' : 1,
+            // style symbol types
+            'symbols' : {
+                'start' : {
+                    'font-color' : 'red',
+                    'element-color' : 'green',
+                    'fill' : 'yellow'
+                },
+                'end' : {
+                    'class' : 'end-element'
+                }
+            },
+            // even flowstate support ;-)
+            'flowstate' : {
+                'past' : {
+                    'fill' : '#CCCCCC',
+                    'font-size' : 12
+                },
+                'current' : {
+                    'fill' : 'yellow',
+                    'font-color' : 'red',
+                    'font-weight' : 'bold'
+                },
+                'future' : {
+                    'fill' : '#FFFF99'
+                },
+                'request' : {
+                    'fill' : 'blue'
+                },
+                'invalid' : {
+                    'fill' : '#444444'
+                },
+                'approved' : {
+                    'fill' : '#58C4A3',
+                    'font-size' : 12,
+                    'yes-text' : 'APPROVED',
+                    'no-text' : 'n/a'
+                },
+                'rejected' : {
+                    'fill' : '#C45879',
+                    'font-size' : 12,
+                    'yes-text' : 'n/a',
+                    'no-text' : 'REJECTED'
+                }
+            }
+        };
+        
         vm.jobSteps = [];
         vm.reverse = true;
         vm.generate = function() {
@@ -97,24 +159,28 @@
                 var chartString = "";
                 for(var i=0;i<vm.jobSteps.length;i++) {
                     var step = vm.jobSteps[i];
-                    chartString += i + '=>' + step.stepType.toLowerCase() + ": " + step.name + "|" + step.stepStatus.toLowerCase() + "\n";
+                    if(step.name) {
+                        chartString += i + '=>' + step.stepType.toLowerCase() + ": " + step.name + "|" + step.stepStatus.toLowerCase() + "\n";
+                    }
                 }
                 chartString += '\n';
                 for(var i=0;i<vm.jobSteps.length;i++) {
                     var step = vm.jobSteps[i];
-                    var path = generatePath(step);
-                    if(path.indexOf('->') >= 0) {
-                        chartString += path +'\n';
-                    }
-                    var conds = generateConditions(step);
-                    if(conds.indexOf('->') >= 0) {
-                        chartString += conds +'\n';
+                    if(step.name) {
+                        var path = generatePath(step);
+                        if(path.indexOf('->') >= 0) {
+                            chartString += path +'\n';
+                        }
+                        var conds = generateConditions(step);
+                        if(conds.indexOf('->') >= 0) {
+                            chartString += conds +'\n';
+                        }
                     }
                 }
                 
                 vm.chartData = chartString;
                 var diagram = flowchart.parse(vm.chartData);
-                diagram.drawSVG('diagram');
+                diagram.drawSVG('diagram', settings);
             }
             
             function generatePath(step) {

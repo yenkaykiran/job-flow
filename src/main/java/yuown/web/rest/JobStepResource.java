@@ -1,12 +1,12 @@
 package yuown.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import yuown.domain.JobStep;
-import yuown.service.JobStepService;
-import yuown.web.rest.util.HeaderUtil;
-import yuown.web.rest.util.PaginationUtil;
-import yuown.web.rest.dto.JobStepDTO;
-import yuown.web.rest.mapper.JobStepMapper;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,15 +16,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import yuown.domain.JobInstance;
+import yuown.domain.JobStep;
+import yuown.service.JobInstanceService;
+import yuown.service.JobStepService;
+import yuown.web.rest.dto.JobStepDTO;
+import yuown.web.rest.mapper.JobStepMapper;
+import yuown.web.rest.util.HeaderUtil;
+import yuown.web.rest.util.PaginationUtil;
+
+import com.codahale.metrics.annotation.Timed;
 
 /**
  * REST controller for managing JobStep.
@@ -37,6 +45,9 @@ public class JobStepResource {
         
     @Inject
     private JobStepService jobStepService;
+    
+    @Inject
+    private JobInstanceService jobInstanceService;
     
     @Inject
     private JobStepMapper jobStepMapper;
@@ -99,10 +110,16 @@ public class JobStepResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Transactional(readOnly = true)
-    public ResponseEntity<List<JobStepDTO>> getAllJobSteps(Pageable pageable)
+	public ResponseEntity<List<JobStepDTO>> getAllJobSteps(@RequestParam(name = "instance", required = false) Long instanceId, Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of JobSteps");
-        Page<JobStep> page = jobStepService.findAll(pageable); 
+        Page<JobStep>  page = null;
+        if(null != instanceId && instanceId > 0) {
+        	JobInstance jobInstance = jobInstanceService.findOne(instanceId);
+        	page = jobStepService.findAllByJobInstance(jobInstance, pageable);
+        } else {
+        	page = jobStepService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/job-steps");
         return new ResponseEntity<>(jobStepMapper.jobStepsToJobStepDTOs(page.getContent()), headers, HttpStatus.OK);
     }
