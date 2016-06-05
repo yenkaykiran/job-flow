@@ -7,7 +7,19 @@
             "otherEntityField": "name"
         },
         {
-            "relationshipName": "jobStep",
+            "relationshipName": "yesPath",
+            "otherEntityName": "jobStep",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "noPath",
+            "otherEntityName": "jobStep",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipName": "nextStep",
             "otherEntityName": "jobStep",
             "relationshipType": "many-to-one",
             "otherEntityField": "name"

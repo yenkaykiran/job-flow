@@ -1,8 +1,11 @@
 package yuown.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -23,6 +26,10 @@ public class JobInstance implements Serializable {
 
     @Column(name = "enabled")
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "jobInstance")
+    @JsonIgnore
+    private Set<JobStep> steps = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -46,6 +53,14 @@ public class JobInstance implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Set<JobStep> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(Set<JobStep> jobSteps) {
+        this.steps = jobSteps;
     }
 
     @Override

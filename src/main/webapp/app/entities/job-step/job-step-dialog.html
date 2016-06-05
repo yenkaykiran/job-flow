@@ -55,8 +55,20 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="field_jobStep">Job Step</label>
-            <select class="form-control" id="field_jobStep" name="jobStep" ng-model="vm.jobStep.jobStep" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+            <label for="field_yesPath">Yes Path</label>
+            <select class="form-control" id="field_yesPath" name="yesPath" ng-model="vm.jobStep.yesPath" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_noPath">No Path</label>
+            <select class="form-control" id="field_noPath" name="noPath" ng-model="vm.jobStep.noPath" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="field_nextStep">Next Step</label>
+            <select class="form-control" id="field_nextStep" name="nextStep" ng-model="vm.jobStep.nextStep" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
                 <option value=""></option>
             </select>
         </div>

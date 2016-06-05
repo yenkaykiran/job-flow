@@ -1,5 +1,13 @@
 {
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipName": "steps",
+            "otherEntityName": "jobStep",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "jobInstance",
+            "ownerSide": true
+        }
+    ],
     "fields": [
         {
             "fieldName": "name",

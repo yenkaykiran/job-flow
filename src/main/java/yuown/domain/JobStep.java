@@ -1,13 +1,21 @@
 package yuown.domain;
 
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-import yuown.domain.enumeration.StepType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import yuown.domain.enumeration.StepStatus;
+import yuown.domain.enumeration.StepType;
 
 /**
  * A JobStep.
@@ -40,7 +48,13 @@ public class JobStep implements Serializable {
     private JobInstance jobInstance;
 
     @ManyToOne
-    private JobStep jobStep;
+    private JobStep yesPath;
+
+    @ManyToOne
+    private JobStep noPath;
+
+    @ManyToOne
+    private JobStep nextStep;
 
     public Long getId() {
         return id;
@@ -90,12 +104,28 @@ public class JobStep implements Serializable {
         this.jobInstance = jobInstance;
     }
 
-    public JobStep getJobStep() {
-        return jobStep;
+    public JobStep getYesPath() {
+        return yesPath;
     }
 
-    public void setJobStep(JobStep jobStep) {
-        this.jobStep = jobStep;
+    public void setYesPath(JobStep jobStep) {
+        this.yesPath = jobStep;
+    }
+
+    public JobStep getNoPath() {
+        return noPath;
+    }
+
+    public void setNoPath(JobStep jobStep) {
+        this.noPath = jobStep;
+    }
+
+    public JobStep getNextStep() {
+        return nextStep;
+    }
+
+    public void setNextStep(JobStep jobStep) {
+        this.nextStep = jobStep;
     }
 
     @Override

@@ -143,6 +143,70 @@
                     $state.go('^');
                 });
             }]
+        }).state('job-instance.newStep', {
+            parent: 'job-instance',
+            url: '/{id}/newStep',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', 'JobInstance', function($stateParams, $state, $uibModal, JobInstance) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/job-step/job-step-dialog.html',
+                    controller: 'JobStepDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: function () {
+                            return {
+                                name: null,
+                                stepType: null,
+                                stepStatus: null,
+                                message: null,
+                                id: null,
+                                jobInstance: JobInstance.get({id : $stateParams.id}),
+                                disableJobInstance: true
+                            };
+                        }
+                    }
+                }).result.then(function() {
+                    $state.go('job-instance', null, { reload: true });
+                }, function() {
+                    $state.go('job-instance');
+                });
+            }]
+        }).state('job-instance.steps', {
+            parent: 'job-instance',
+            url: '/{id}/steps',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'Instance Steps'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/job-step/job-steps.html',
+                    controller: 'JobStepController1',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+            }
+        }).state('job-instance.chart', {
+            parent: 'job-instance',
+            url: '/{id}/chart',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'Instance Chart'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/entities/job-instance/job-chart.html',
+                    controller: 'JobChartController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+            }
         });
     }
 

@@ -5,9 +5,9 @@
         .module('jobflowApp')
         .controller('JobInstanceDetailController', JobInstanceDetailController);
 
-    JobInstanceDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'JobInstance'];
+    JobInstanceDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'JobInstance', 'JobStep'];
 
-    function JobInstanceDetailController($scope, $rootScope, $stateParams, entity, JobInstance) {
+    function JobInstanceDetailController($scope, $rootScope, $stateParams, entity, JobInstance, JobStep) {
         var vm = this;
         vm.jobInstance = entity;
         

@@ -5,11 +5,12 @@
         .module('jobflowApp')
         .controller('JobInstanceDialogController', JobInstanceDialogController);
 
-    JobInstanceDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'JobInstance'];
+    JobInstanceDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'JobInstance', 'JobStep'];
 
-    function JobInstanceDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, JobInstance) {
+    function JobInstanceDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, JobInstance, JobStep) {
         var vm = this;
         vm.jobInstance = entity;
+        vm.jobsteps = JobStep.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

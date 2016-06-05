@@ -24,7 +24,9 @@
                     <th jh-sort-by="stepStatus"><span>Step Status</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="message"><span>Message</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="jobInstance.name"><span>Job Instance</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="jobStep.name"><span>Job Step</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="yesPath.name"><span>Yes Path</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="noPath.name"><span>No Path</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="nextStep.name"><span>Next Step</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -39,7 +41,13 @@
                         <a ui-sref="job-instance-detail({id:jobStep.jobInstance.id})">{{jobStep.jobInstance.name}}</a>
                     </td>
                     <td>
-                        <a ui-sref="job-step-detail({id:jobStep.jobStep.id})">{{jobStep.jobStep.name}}</a>
+                        <a ui-sref="job-step-detail({id:jobStep.yesPath.id})">{{jobStep.yesPath.name}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="job-step-detail({id:jobStep.noPath.id})">{{jobStep.noPath.name}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="job-step-detail({id:jobStep.nextStep.id})">{{jobStep.nextStep.name}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

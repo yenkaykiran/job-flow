@@ -38,7 +38,9 @@
             </column>
             
             <column name="job_instance_id" type="bigint"/>
-            <column name="job_step_id" type="bigint"/>
+            <column name="yes_path_id" type="bigint"/>
+            <column name="no_path_id" type="bigint"/>
+            <column name="next_step_id" type="bigint"/>
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>
         

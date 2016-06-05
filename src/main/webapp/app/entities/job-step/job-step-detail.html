@@ -28,9 +28,19 @@
             <a ui-sref="job-instance-detail({id:vm.jobStep.jobInstance.id})">{{vm.jobStep.jobInstance.name}}</a>
         </dd>
         <hr>
-        <dt><span>Job Step</span></dt>
+        <dt><span>Yes Path</span></dt>
         <dd>
-            <a ui-sref="job-step-detail({id:vm.jobStep.jobStep.id})">{{vm.jobStep.jobStep.name}}</a>
+            <a ui-sref="job-step-detail({id:vm.jobStep.yesPath.id})">{{vm.jobStep.yesPath.name}}</a>
+        </dd>
+        <hr>
+        <dt><span>No Path</span></dt>
+        <dd>
+            <a ui-sref="job-step-detail({id:vm.jobStep.noPath.id})">{{vm.jobStep.noPath.name}}</a>
+        </dd>
+        <hr>
+        <dt><span>Next Step</span></dt>
+        <dd>
+            <a ui-sref="job-step-detail({id:vm.jobStep.nextStep.id})">{{vm.jobStep.nextStep.name}}</a>
         </dd>
         <hr>
     </dl>

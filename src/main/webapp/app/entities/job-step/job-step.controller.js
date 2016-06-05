@@ -50,4 +50,119 @@
         vm.loadAll();
 
     }
+    
+    angular
+    .module('jobflowApp')
+    .controller('JobStepController1', JobStepController1);
+
+    JobStepController1.$inject = ['$scope', '$state', 'JobStep', 'ParseLinks', 'AlertService', '$stateParams'];
+
+    function JobStepController1 ($scope, $state, JobStep, ParseLinks, AlertService, $stateParams) {
+        var vm = this;
+        vm.jobSteps = [];
+        vm.reverse = true;
+        vm.loadAll = function() {
+            JobStep.query({
+                instance: $stateParams.id
+            }, onSuccess);
+            function onSuccess(data, headers) {
+                for (var i = 0; i < data.length; i++) {
+                    vm.jobSteps.push(data[i]);
+                }
+            }
+        };
+
+        vm.loadAll();
+    }
+    
+    angular
+    .module('jobflowApp')
+    .controller('JobChartController', JobChartController);
+
+    JobChartController.$inject = ['$scope', '$state', 'JobStep', 'ParseLinks', 'AlertService', '$stateParams'];
+
+    function JobChartController ($scope, $state, JobStep, ParseLinks, AlertService, $stateParams) {
+        var vm = this;
+        vm.jobSteps = [];
+        vm.reverse = true;
+        vm.generate = function() {
+            JobStep.query({
+                instance: $stateParams.id
+            }, onSuccess);
+            function onSuccess(data, headers) {
+                for (var i = 0; i < data.length; i++) {
+                    vm.jobSteps.push(data[i]);
+                }
+                
+                var chartString = "";
+                for(var i=0;i<vm.jobSteps.length;i++) {
+                    var step = vm.jobSteps[i];
+                    chartString += i + '=>' + step.stepType.toLowerCase() + ": " + step.name + "|" + step.stepStatus.toLowerCase() + "\n";
+                }
+                chartString += '\n';
+                for(var i=0;i<vm.jobSteps.length;i++) {
+                    var step = vm.jobSteps[i];
+                    var path = generatePath(step);
+                    if(path.indexOf('->') >= 0) {
+                        chartString += path +'\n';
+                    }
+                    var conds = generateConditions(step);
+                    if(conds.indexOf('->') >= 0) {
+                        chartString += conds +'\n';
+                    }
+                }
+                
+                vm.chartData = chartString;
+                var diagram = flowchart.parse(vm.chartData);
+                diagram.drawSVG('diagram');
+            }
+            
+            function generatePath(step) {
+                var path = '';
+                if(step) {
+                    path += findIndex(step);
+                    if(step.nextStep) {
+                        path += "->";
+                    }
+                    path += generatePath(step.nextStep);
+                    console.log(path);
+                }
+                return path;
+            }
+            
+            function generateConditions(step) {
+                var path = '';
+                if(step) {
+                    if(step.yesPath) {
+                        path += findIndex(step);
+                        path += "(yes)->";
+                        path += generatePath(step.yesPath);
+                    }
+                    path += '\n';
+                    if(step.noPath) {
+                        path += findIndex(step);
+                        path += "(no)->";
+                        path += generatePath(step.noPath);
+                    }
+                    console.log(path);
+                }
+                return path;
+            }
+            
+            function findIndex(step) {
+                var index = 0;
+                for(var i=0;i<vm.jobSteps.length;i++) {
+                    if(vm.jobSteps[i].id == step.id) {
+                        index=i;
+                        break;
+                    }
+                }
+                return index;
+            }
+            
+        };
+        
+        
+
+    }
 })();
