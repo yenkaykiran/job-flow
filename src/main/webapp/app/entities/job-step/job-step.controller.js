@@ -121,10 +121,10 @@
                 var path = '';
                 if(step) {
                     path += findIndex(step);
-                    if(step.nextStep) {
+                    if(step.nextStepId) {
                         path += "->";
                     }
-                    path += generatePath(step.nextStep);
+                    path += generatePath(findStep(step.nextStepId));
                     console.log(path);
                 }
                 return path;
@@ -133,16 +133,16 @@
             function generateConditions(step) {
                 var path = '';
                 if(step) {
-                    if(step.yesPath) {
+                    if(step.yesPathId) {
                         path += findIndex(step);
                         path += "(yes)->";
-                        path += generatePath(step.yesPath);
+                        path += generatePath(findStep(step.yesPathId));
                     }
                     path += '\n';
-                    if(step.noPath) {
+                    if(step.noPathId) {
                         path += findIndex(step);
                         path += "(no)->";
-                        path += generatePath(step.noPath);
+                        path += generatePath(findStep(step.noPathId));
                     }
                     console.log(path);
                 }
@@ -160,9 +160,20 @@
                 return index;
             }
             
+            function findStep(stepId) {
+                var step = null;
+                for(var i=0;i<vm.jobSteps.length;i++) {
+                    if(vm.jobSteps[i].id == stepId) {
+                        step = vm.jobSteps[i];
+                        break;
+                    }
+                }
+                return step;
+            }
+            
         };
         
-        
+        vm.generate();
 
     }
 })();

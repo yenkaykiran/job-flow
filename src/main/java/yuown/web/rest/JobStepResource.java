@@ -5,6 +5,8 @@ import yuown.domain.JobStep;
 import yuown.service.JobStepService;
 import yuown.web.rest.util.HeaderUtil;
 import yuown.web.rest.util.PaginationUtil;
+import yuown.web.rest.dto.JobStepDTO;
+import yuown.web.rest.mapper.JobStepMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,13 +15,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing JobStep.
@@ -33,23 +38,26 @@ public class JobStepResource {
     @Inject
     private JobStepService jobStepService;
     
+    @Inject
+    private JobStepMapper jobStepMapper;
+    
     /**
      * POST  /job-steps : Create a new jobStep.
      *
-     * @param jobStep the jobStep to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new jobStep, or with status 400 (Bad Request) if the jobStep has already an ID
+     * @param jobStepDTO the jobStepDTO to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new jobStepDTO, or with status 400 (Bad Request) if the jobStep has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/job-steps",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JobStep> createJobStep(@RequestBody JobStep jobStep) throws URISyntaxException {
-        log.debug("REST request to save JobStep : {}", jobStep);
-        if (jobStep.getId() != null) {
+    public ResponseEntity<JobStepDTO> createJobStep(@RequestBody JobStepDTO jobStepDTO) throws URISyntaxException {
+        log.debug("REST request to save JobStep : {}", jobStepDTO);
+        if (jobStepDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("jobStep", "idexists", "A new jobStep cannot already have an ID")).body(null);
         }
-        JobStep result = jobStepService.save(jobStep);
+        JobStepDTO result = jobStepService.save(jobStepDTO);
         return ResponseEntity.created(new URI("/api/job-steps/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("jobStep", result.getId().toString()))
             .body(result);
@@ -58,24 +66,24 @@ public class JobStepResource {
     /**
      * PUT  /job-steps : Updates an existing jobStep.
      *
-     * @param jobStep the jobStep to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated jobStep,
-     * or with status 400 (Bad Request) if the jobStep is not valid,
-     * or with status 500 (Internal Server Error) if the jobStep couldnt be updated
+     * @param jobStepDTO the jobStepDTO to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated jobStepDTO,
+     * or with status 400 (Bad Request) if the jobStepDTO is not valid,
+     * or with status 500 (Internal Server Error) if the jobStepDTO couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @RequestMapping(value = "/job-steps",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JobStep> updateJobStep(@RequestBody JobStep jobStep) throws URISyntaxException {
-        log.debug("REST request to update JobStep : {}", jobStep);
-        if (jobStep.getId() == null) {
-            return createJobStep(jobStep);
+    public ResponseEntity<JobStepDTO> updateJobStep(@RequestBody JobStepDTO jobStepDTO) throws URISyntaxException {
+        log.debug("REST request to update JobStep : {}", jobStepDTO);
+        if (jobStepDTO.getId() == null) {
+            return createJobStep(jobStepDTO);
         }
-        JobStep result = jobStepService.save(jobStep);
+        JobStepDTO result = jobStepService.save(jobStepDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("jobStep", jobStep.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert("jobStep", jobStepDTO.getId().toString()))
             .body(result);
     }
 
@@ -90,28 +98,29 @@ public class JobStepResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<JobStep>> getAllJobSteps(Pageable pageable)
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<JobStepDTO>> getAllJobSteps(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of JobSteps");
         Page<JobStep> page = jobStepService.findAll(pageable); 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/job-steps");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(jobStepMapper.jobStepsToJobStepDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
     /**
      * GET  /job-steps/:id : get the "id" jobStep.
      *
-     * @param id the id of the jobStep to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the jobStep, or with status 404 (Not Found)
+     * @param id the id of the jobStepDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the jobStepDTO, or with status 404 (Not Found)
      */
     @RequestMapping(value = "/job-steps/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JobStep> getJobStep(@PathVariable Long id) {
+    public ResponseEntity<JobStepDTO> getJobStep(@PathVariable Long id) {
         log.debug("REST request to get JobStep : {}", id);
-        JobStep jobStep = jobStepService.findOne(id);
-        return Optional.ofNullable(jobStep)
+        JobStepDTO jobStepDTO = jobStepService.findOne(id);
+        return Optional.ofNullable(jobStepDTO)
             .map(result -> new ResponseEntity<>(
                 result,
                 HttpStatus.OK))
@@ -121,7 +130,7 @@ public class JobStepResource {
     /**
      * DELETE  /job-steps/:id : delete the "id" jobStep.
      *
-     * @param id the id of the jobStep to delete
+     * @param id the id of the jobStepDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @RequestMapping(value = "/job-steps/{id}",

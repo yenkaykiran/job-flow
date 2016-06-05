@@ -4,6 +4,8 @@ import yuown.JobflowApp;
 import yuown.domain.JobStep;
 import yuown.repository.JobStepRepository;
 import yuown.service.JobStepService;
+import yuown.web.rest.dto.JobStepDTO;
+import yuown.web.rest.mapper.JobStepMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,6 +61,9 @@ public class JobStepResourceIntTest {
     private JobStepRepository jobStepRepository;
 
     @Inject
+    private JobStepMapper jobStepMapper;
+
+    @Inject
     private JobStepService jobStepService;
 
     @Inject
@@ -76,6 +81,7 @@ public class JobStepResourceIntTest {
         MockitoAnnotations.initMocks(this);
         JobStepResource jobStepResource = new JobStepResource();
         ReflectionTestUtils.setField(jobStepResource, "jobStepService", jobStepService);
+        ReflectionTestUtils.setField(jobStepResource, "jobStepMapper", jobStepMapper);
         this.restJobStepMockMvc = MockMvcBuilders.standaloneSetup(jobStepResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -96,10 +102,11 @@ public class JobStepResourceIntTest {
         int databaseSizeBeforeCreate = jobStepRepository.findAll().size();
 
         // Create the JobStep
+        JobStepDTO jobStepDTO = jobStepMapper.jobStepToJobStepDTO(jobStep);
 
         restJobStepMockMvc.perform(post("/api/job-steps")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(jobStep)))
+                .content(TestUtil.convertObjectToJsonBytes(jobStepDTO)))
                 .andExpect(status().isCreated());
 
         // Validate the JobStep in the database
@@ -158,8 +165,7 @@ public class JobStepResourceIntTest {
     @Transactional
     public void updateJobStep() throws Exception {
         // Initialize the database
-        jobStepService.save(jobStep);
-
+        jobStepRepository.saveAndFlush(jobStep);
         int databaseSizeBeforeUpdate = jobStepRepository.findAll().size();
 
         // Update the jobStep
@@ -169,10 +175,11 @@ public class JobStepResourceIntTest {
         updatedJobStep.setStepType(UPDATED_STEP_TYPE);
         updatedJobStep.setStepStatus(UPDATED_STEP_STATUS);
         updatedJobStep.setMessage(UPDATED_MESSAGE);
+        JobStepDTO jobStepDTO = jobStepMapper.jobStepToJobStepDTO(updatedJobStep);
 
         restJobStepMockMvc.perform(put("/api/job-steps")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedJobStep)))
+                .content(TestUtil.convertObjectToJsonBytes(jobStepDTO)))
                 .andExpect(status().isOk());
 
         // Validate the JobStep in the database
@@ -189,8 +196,7 @@ public class JobStepResourceIntTest {
     @Transactional
     public void deleteJobStep() throws Exception {
         // Initialize the database
-        jobStepService.save(jobStep);
-
+        jobStepRepository.saveAndFlush(jobStep);
         int databaseSizeBeforeDelete = jobStepRepository.findAll().size();
 
         // Get the jobStep

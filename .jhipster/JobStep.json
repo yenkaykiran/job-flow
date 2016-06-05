@@ -46,8 +46,8 @@
             "fieldType": "String"
         }
     ],
-    "changelogDate": "20160603134634",
-    "dto": "no",
+    "changelogDate": "20160605102610",
+    "dto": "mapstruct",
     "service": "serviceClass",
     "entityTableName": "job_steps",
     "pagination": "infinite-scroll"

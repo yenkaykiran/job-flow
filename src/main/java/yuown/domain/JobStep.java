@@ -1,21 +1,13 @@
 package yuown.domain;
 
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import yuown.domain.enumeration.StepType;
 
 import yuown.domain.enumeration.StepStatus;
-import yuown.domain.enumeration.StepType;
 
 /**
  * A JobStep.

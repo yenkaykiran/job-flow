@@ -2,6 +2,8 @@ package yuown.service;
 
 import yuown.domain.JobStep;
 import yuown.repository.JobStepRepository;
+import yuown.web.rest.dto.JobStepDTO;
+import yuown.web.rest.mapper.JobStepMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing JobStep.
@@ -24,15 +28,20 @@ public class JobStepService {
     @Inject
     private JobStepRepository jobStepRepository;
     
+    @Inject
+    private JobStepMapper jobStepMapper;
+    
     /**
      * Save a jobStep.
      * 
-     * @param jobStep the entity to save
+     * @param jobStepDTO the entity to save
      * @return the persisted entity
      */
-    public JobStep save(JobStep jobStep) {
-        log.debug("Request to save JobStep : {}", jobStep);
-        JobStep result = jobStepRepository.save(jobStep);
+    public JobStepDTO save(JobStepDTO jobStepDTO) {
+        log.debug("Request to save JobStep : {}", jobStepDTO);
+        JobStep jobStep = jobStepMapper.jobStepDTOToJobStep(jobStepDTO);
+        jobStep = jobStepRepository.save(jobStep);
+        JobStepDTO result = jobStepMapper.jobStepToJobStepDTO(jobStep);
         return result;
     }
 
@@ -56,10 +65,11 @@ public class JobStepService {
      *  @return the entity
      */
     @Transactional(readOnly = true) 
-    public JobStep findOne(Long id) {
+    public JobStepDTO findOne(Long id) {
         log.debug("Request to get JobStep : {}", id);
         JobStep jobStep = jobStepRepository.findOne(id);
-        return jobStep;
+        JobStepDTO jobStepDTO = jobStepMapper.jobStepToJobStepDTO(jobStep);
+        return jobStepDTO;
     }
 
     /**

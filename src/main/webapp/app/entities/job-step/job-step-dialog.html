@@ -50,25 +50,25 @@
 
         <div class="form-group">
             <label for="field_jobInstance">Job Instance</label>
-            <select class="form-control" id="field_jobInstance" name="jobInstance" ng-model="vm.jobStep.jobInstance" ng-options="jobInstance as jobInstance.name for jobInstance in vm.jobinstances track by jobInstance.id">
+            <select class="form-control" id="field_jobInstance" name="jobInstance" ng-model="vm.jobStep.jobInstanceId" ng-options="jobInstance.id as jobInstance.name for jobInstance in vm.jobinstances">
                 <option value=""></option>
             </select>
         </div>
         <div class="form-group">
             <label for="field_yesPath">Yes Path</label>
-            <select class="form-control" id="field_yesPath" name="yesPath" ng-model="vm.jobStep.yesPath" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+            <select class="form-control" id="field_yesPath" name="yesPath" ng-model="vm.jobStep.yesPathId" ng-options="jobStep.id as jobStep.name for jobStep in vm.jobsteps">
                 <option value=""></option>
             </select>
         </div>
         <div class="form-group">
             <label for="field_noPath">No Path</label>
-            <select class="form-control" id="field_noPath" name="noPath" ng-model="vm.jobStep.noPath" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+            <select class="form-control" id="field_noPath" name="noPath" ng-model="vm.jobStep.noPathId" ng-options="jobStep.id as jobStep.name for jobStep in vm.jobsteps">
                 <option value=""></option>
             </select>
         </div>
         <div class="form-group">
             <label for="field_nextStep">Next Step</label>
-            <select class="form-control" id="field_nextStep" name="nextStep" ng-model="vm.jobStep.nextStep" ng-options="jobStep as jobStep.name for jobStep in vm.jobsteps track by jobStep.id">
+            <select class="form-control" id="field_nextStep" name="nextStep" ng-model="vm.jobStep.nextStepId" ng-options="jobStep.id as jobStep.name for jobStep in vm.jobsteps">
                 <option value=""></option>
             </select>
         </div>
