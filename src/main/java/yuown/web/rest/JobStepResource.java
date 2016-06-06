@@ -116,12 +116,13 @@ public class JobStepResource {
         Page<JobStep>  page = null;
         if(null != instanceId && instanceId > 0) {
         	JobInstance jobInstance = jobInstanceService.findOne(instanceId);
-        	page = jobStepService.findAllByJobInstance(jobInstance, pageable);
+        	List<JobStep> stepsByInstance = jobStepService.findAllByJobInstance(jobInstance);
+        	return new ResponseEntity<>(jobStepMapper.jobStepsToJobStepDTOs(stepsByInstance), HttpStatus.OK);
         } else {
         	page = jobStepService.findAll(pageable);
+        	HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/job-steps");
+            return new ResponseEntity<>(jobStepMapper.jobStepsToJobStepDTOs(page.getContent()), headers, HttpStatus.OK);
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/job-steps");
-        return new ResponseEntity<>(jobStepMapper.jobStepsToJobStepDTOs(page.getContent()), headers, HttpStatus.OK);
     }
 
     /**
