@@ -11,11 +11,12 @@
         var vm = this;
         vm.jobStep = entity;
         vm.jobinstances = JobInstance.query();
-        if(vm.jobStep.jobInstanceId) {
-            vm.jobsteps = vm.getInstanceSteps(vm.jobStep.jobInstanceId);
-        } else {
-            vm.jobsteps = JobStep.query();
-        }
+        vm.jobsteps = [];
+//        if(vm.jobStep.jobInstanceId) {
+//            vm.jobsteps = vm.getInstanceSteps(vm.jobStep.jobInstanceId);
+//        } else {
+//            vm.jobsteps = JobStep.query();
+//        }
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -45,7 +46,8 @@
         };
         
         vm.getInstanceSteps = function(instanceId) {
-            return JobStep.byInstance({instance: instanceId});
+            console.log("I: " + instanceId);
+            vm.jobsteps = JobStep.byInstance({instance: instanceId});
         }
     }
 })();
